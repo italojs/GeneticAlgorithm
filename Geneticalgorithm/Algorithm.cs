@@ -33,7 +33,7 @@ namespace Geneticalgorithm
                 Individual[] child = new Individual[2];
 
                 //verifica a taxa de crossover, se sim realiza o crossover, se não, mantém os pais selecionados para a próxima geração
-                if (r.Next() <= CrossoverRate)
+                if (r.NextDouble() <= CrossoverRate)
                 {
                     child = Crossover(fathers[1], fathers[0]);
                 }
@@ -73,7 +73,7 @@ namespace Geneticalgorithm
             //realiza o corte, 
             geneFilho1 = genePai1.Substring(0, pontoCorte1);
             geneFilho1 += genePai2.Substring(pontoCorte1, pontoCorte2);
-            geneFilho1 += genePai1.Substring(pontoCorte2, genePai1.Length);
+            geneFilho1 += genePai1.Substring(4, 9);
 
             geneFilho2 = genePai2.Substring(0, pontoCorte1);
             geneFilho2 += genePai1.Substring(pontoCorte1, pontoCorte2);
