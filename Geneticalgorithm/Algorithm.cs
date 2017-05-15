@@ -53,37 +53,44 @@ namespace Geneticalgorithm
             return newPopulation;
         }
 
-        public static Individual[] Crossover(Individual individuo1, Individual individuo2)
+        public static Individual[] Crossover(Individual individual1, Individual individual2)
         {
             Random r = new Random();
 
             //sorteia o ponto de corte
-            int pontoCorte1 = r.Next((individuo1.Genes.Length / 2) - 2) + 1;
-            int pontoCorte2 = r.Next((individuo1.Genes.Length / 2) - 2) + individuo1.Genes.Length / 2;
+            int Cutoff1 = r.Next((individual1.Genes.Length / 2) - 2) + 1;
+            int Cutoff2 = r.Next((individual1.Genes.Length / 2) - 2) + individual1.Genes.Length / 2;
 
-            Individual[] filhos = new Individual[2];
+            Individual[] sons = new Individual[2];
 
             //pega os genes dos pais
-            string genePai1 = individuo1.Genes;
-            string genePai2 = individuo2.Genes;
+            string fatherGene1 = individual1.Genes;
+            string fatherGene2 = individual2.Genes;
 
-            string geneFilho1;
-            string geneFilho2;
+            string SonGene1;
+            string sonGene2;
 
             //realiza o corte, 
-            geneFilho1 = genePai1.Substring(0, pontoCorte1);
-            geneFilho1 += genePai2.Substring(pontoCorte1, pontoCorte2);
-            geneFilho1 += genePai1.Substring(4, 9);
 
-            geneFilho2 = genePai2.Substring(0, pontoCorte1);
-            geneFilho2 += genePai1.Substring(pontoCorte1, pontoCorte2);
-            geneFilho2 += genePai2.Substring(pontoCorte2, genePai2.Length);
+            //WARNNING
+            //aqui nos temos o seguinte problema, no java nós temos subtring(onde começa, onde termina);
+            //no c# nós temos substring(onde começa, mais quantas casas pra frente tu quer pegar);
+            //isso esta influenciando a logica do algoritimo
+            //ainda nao tive tempo de arrumar isso
+            //solução simples e porca até agora Substring(Cutoff2, fatherGene1.Length - Cutoff2);
+            SonGene1 = fatherGene1.Substring(0, Cutoff1);
+            SonGene1 += fatherGene2.Substring(Cutoff1, Cutoff2);
+            SonGene1 += fatherGene1.Substring(Cutoff2, fatherGene1.Length);
+
+            sonGene2 = fatherGene2.Substring(0, Cutoff1);
+            sonGene2 += fatherGene1.Substring(Cutoff1, Cutoff2);
+            sonGene2 += fatherGene2.Substring(Cutoff2, fatherGene2.Length);
 
             //cria o novo indivíduo com os genes dos pais
-            filhos[0] = new Individual(geneFilho1);
-            filhos[1] = new Individual(geneFilho2);
+            sons[0] = new Individual(SonGene1);
+            sons[1] = new Individual(sonGene2);
 
-            return filhos;
+            return sons;
         }
 
         public static Individual[] GetTwoBestIndividual(Population Population)
