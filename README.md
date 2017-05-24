@@ -46,5 +46,5 @@ Just dowload the project and set a double-click into Geneticalgorithm.sln
 
 ## Contributing
 
-soon...
+Look the issues, fork me and send a pull request.
 
