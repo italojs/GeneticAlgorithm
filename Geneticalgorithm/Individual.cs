@@ -69,8 +69,12 @@ namespace Geneticalgorithm
             
             for (int i = 0; i < finalResult.Length; i++)
             {
-                if (_genes[i] == finalResult[i])
-                    _aptitude++;
+                try
+                {
+                    if (_genes[i] == finalResult[i])
+                        _aptitude++;
+                }
+                catch { }
             }
         }
 

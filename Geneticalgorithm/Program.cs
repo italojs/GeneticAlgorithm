@@ -21,16 +21,14 @@ namespace Geneticalgorithm
             //numero máximo de gerações
             long MaxGenerations = 1000;
 
-            //define o número de genes do indivíduo baseado na solução
-            int numGenes = Algorithm.FinalResult.Length;
 
             //cria a primeira população aleatérioa
-            Population Population = new Population(numGenes, PopulationLenth);
+            Population Population = new Population(Algorithm.FinalResult.Length, PopulationLenth);
 
             bool mathFinalResult = false;
             int generations = 0;
 
-            Console.WriteLine("Iniciando... Aptidao da solucao: " + numGenes);
+            Console.WriteLine("Iniciando... Aptidao da solucao: " + Algorithm.FinalResult.Length);
 
             //loop até o critério de parada
             while (!mathFinalResult && generations < MaxGenerations)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Geneticalgorithm
 {
@@ -21,6 +22,8 @@ namespace Geneticalgorithm
             _individuals = new Individual[populationLenth];
             for (int i = 0; i < _individuals.Length; i++)
             {
+               //comentar isso aqui
+                Thread.Sleep(30);
                 _individuals[i] = new Individual(numGenes);
             }
         }
@@ -58,20 +61,12 @@ namespace Geneticalgorithm
         //verifoca se algum indivíduo da população possui a resultado final
         public bool MathFinalResult(string finalResult)
         {
-            Individual i = null;
             for (int j = 0; j < _individuals.Length; j++)
             {
                 if (_individuals[j].Genes == finalResult)
-                {
-                    i = _individuals[j];
-                    break;
-                }
+                    return true;   
             }
-            if (i == null)
-            {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         //ordena a população pelo valor de aptidão de cada indivíduo, do maior valor para o menor, assim se eu quiser obter o melhor indivíduo desta população, acesso a posição 0 do array de indivíduos
@@ -111,6 +106,12 @@ namespace Geneticalgorithm
         public Individual GetIndivdualAt(int position)
         {
             return _individuals[position];
+        }
+
+        public Individual GetBestIndividual()
+        {
+            SortPopulation();
+            return _individuals[0];
         }
     }
 }

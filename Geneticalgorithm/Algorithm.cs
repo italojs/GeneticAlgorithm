@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Geneticalgorithm
 {
@@ -15,27 +16,34 @@ namespace Geneticalgorithm
         public static Population NewGeneration(Population population, bool elitism)
         {
             Random r = new Random();
-            //nova população do mesmo tamanho da antiga
+            //nova população do mesmo tamanho da antiga porém toda nulla
             Population newPopulation = new Population(population.PopulationLenth);
+
+            Individual bestIndividual = null;
 
             //se tiver elitismo, mantém o melhor indivíduo da geração atual
             if (elitism)
             {
-                newPopulation.SetIndividuo(population.GetIndivdualAt(0));
+                bestIndividual = population.GetBestIndividual();
+                newPopulation.SetIndividuo(population.GetBestIndividual());
             }
 
             //insere novos indivíduos na nova população, até atingir o tamanho máximo
             while (newPopulation.GetIndividualsQuantity() < newPopulation.PopulationLenth)
             {
+                Thread.Sleep(30);
                 //seleciona os 2 pais por torneio
-                Individual[] fathers = GetTwoBestIndividual(population);
+                Individual[] fathers = GetTwoRandonBestIndividual(population);
 
                 Individual[] child = new Individual[2];
 
                 //verifica a taxa de crossover, se sim realiza o crossover, se não, mantém os pais selecionados para a próxima geração
                 if (r.NextDouble() <= CrossoverRate)
                 {
-                    child = Crossover(fathers[1], fathers[0]);
+                    if(bestIndividual != null)
+                        child = Crossover(bestIndividual, fathers[0]);
+                    else
+                        child = Crossover(fathers[1], fathers[0]);
                 }
                 else
                 {
@@ -58,8 +66,8 @@ namespace Geneticalgorithm
             Random r = new Random();
 
             //sorteia o ponto de corte
-            int Cutoff1 = r.Next((individual1.Genes.Length / 2) - 2) + 1;
-            int Cutoff2 = r.Next((individual1.Genes.Length / 2) - 2) + individual1.Genes.Length / 2;
+            int Cutoff1 = r.Next((individual1.Genes.Length));//3
+            int Cutoff2 = individual2.Genes.Length - Cutoff1;//7
 
             Individual[] sons = new Individual[2];
 
@@ -78,13 +86,15 @@ namespace Geneticalgorithm
             //isso esta influenciando a logica do algoritimo
             //ainda nao tive tempo de arrumar isso
             //solução simples e porca até agora Substring(Cutoff2, fatherGene1.Length - Cutoff2);
-            SonGene1 = fatherGene1.Substring(0, Cutoff1);
-            SonGene1 += fatherGene2.Substring(Cutoff1, Cutoff2);
-            SonGene1 += fatherGene1.Substring(Cutoff2, fatherGene1.Length);
+            //father1 = abcdefgh56
+            //father 2 = asdcvbnm,.
+            SonGene1 = fatherGene1.Substring(0, Cutoff1);//abc
+            SonGene1 += fatherGene2.Substring(Cutoff1, Cutoff2 );//abccvbn
+            //SonGene1 += fatherGene1.Substring(Cutoff2, fatherGene1.Length);
 
-            sonGene2 = fatherGene2.Substring(0, Cutoff1);
-            sonGene2 += fatherGene1.Substring(Cutoff1, Cutoff2);
-            sonGene2 += fatherGene2.Substring(Cutoff2, fatherGene2.Length);
+            sonGene2 = fatherGene2.Substring(0, Cutoff1);//asd
+            sonGene2 += fatherGene1.Substring(Cutoff1, Cutoff2);//asddefg
+            //sonGene2 += fatherGene2.Substring(Cutoff2, fatherGene2.Length);//asddefgm,.
 
             //cria o novo indivíduo com os genes dos pais
             sons[0] = new Individual(SonGene1);
@@ -93,7 +103,8 @@ namespace Geneticalgorithm
             return sons;
         }
 
-        public static Individual[] GetTwoBestIndividual(Population Population)
+        //mudar o nome desse metodo para get two best intermediate individuals
+        public static Individual[] GetTwoRandonBestIndividual(Population Population)
         {
             Random r = new Random();
             Population PopulationIntermediaria = new Population(3);
