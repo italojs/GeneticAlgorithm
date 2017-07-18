@@ -12,7 +12,7 @@ namespace Geneticalgorithm
         private int _populationLenth;
 
         public int PopulationLenth => _populationLenth;
-        public Individual[] Individuals => _individuals;
+        public Individual[] Individuals {get { return _individuals; } set { _individuals = value; }}
 
 
         //cria uma população com indivíduos aleatória
@@ -76,7 +76,7 @@ namespace Geneticalgorithm
             while (flag)
             {
                 flag = false;
-                for (int i = 0; i < _individuals.Length - 1; i++)
+                for (int i = 0; i < _individuals.Length -1 ; i++)
                 {
                     if (_individuals[i].Aptitude < _individuals[i + 1].Aptitude)
                     {
@@ -90,7 +90,7 @@ namespace Geneticalgorithm
         }
 
         //número de indivíduos existentes na população
-        public int GetIndividualsQuantity()
+        public int Length()
         {
             int num = 0;
             for (int i = 0; i < _individuals.Length; i++)

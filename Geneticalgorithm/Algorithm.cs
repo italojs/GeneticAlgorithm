@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace Geneticalgorithm
@@ -15,6 +13,7 @@ namespace Geneticalgorithm
 
         public static Population NewGeneration(Population population, bool elitism)
         {
+     
             Random r = new Random();
             //nova população do mesmo tamanho da antiga porém toda nulla
             Population newPopulation = new Population(population.PopulationLenth);
@@ -25,15 +24,15 @@ namespace Geneticalgorithm
             if (elitism)
             {
                 bestIndividual = population.GetBestIndividual();
-                newPopulation.SetIndividuo(population.GetBestIndividual());
+                newPopulation.SetIndividuo(bestIndividual);
             }
 
             //insere novos indivíduos na nova população, até atingir o tamanho máximo
-            while (newPopulation.GetIndividualsQuantity() < newPopulation.PopulationLenth)
+            while (newPopulation.Length() < newPopulation.PopulationLenth)
             {
                 Thread.Sleep(30);
                 //seleciona os 2 pais por torneio
-                Individual[] fathers = GetTwoRandonBestIndividual(population);
+                Individual[] fathers = GetTwoRandomBestIndividual(population);
 
                 Individual[] child = new Individual[2];
 
@@ -68,6 +67,7 @@ namespace Geneticalgorithm
             //sorteia o ponto de corte
             int Cutoff1 = r.Next((individual1.Genes.Length));//3
             int Cutoff2 = individual2.Genes.Length - Cutoff1;//7
+       
 
             Individual[] sons = new Individual[2];
 
@@ -78,14 +78,7 @@ namespace Geneticalgorithm
             string SonGene1;
             string sonGene2;
 
-            //realiza o corte, 
-
-            //WARNNING
-            //aqui nos temos o seguinte problema, no java nós temos subtring(onde começa, onde termina);
-            //no c# nós temos substring(onde começa, mais quantas casas pra frente tu quer pegar);
-            //isso esta influenciando a logica do algoritimo
-            //ainda nao tive tempo de arrumar isso
-            //solução simples e porca até agora Substring(Cutoff2, fatherGene1.Length - Cutoff2);
+            //realiza o corte
             //father1 = abcdefgh56
             //father 2 = asdcvbnm,.
             SonGene1 = fatherGene1.Substring(0, Cutoff1);//abc
@@ -104,24 +97,25 @@ namespace Geneticalgorithm
         }
 
         //mudar o nome desse metodo para get two best intermediate individuals
-        public static Individual[] GetTwoRandonBestIndividual(Population Population)
+        public static Individual[] GetTwoRandomBestIndividual(Population population)
         {
             Random r = new Random();
-            Population PopulationIntermediaria = new Population(3);
+            Population randomPopulation = new Population(4);
 
             //seleciona 3 indivíduos aleatóriamente na população
-            PopulationIntermediaria.SetIndividuo(Population.GetIndivdualAt(r.Next(Population.PopulationLenth)));
-            PopulationIntermediaria.SetIndividuo(Population.GetIndivdualAt(r.Next(Population.PopulationLenth)));
-            PopulationIntermediaria.SetIndividuo(Population.GetIndivdualAt(r.Next(Population.PopulationLenth)));
+            for (int i = 0; i < 4; i++)
+            {
+                randomPopulation.SetIndividuo(population.GetIndivdualAt(r.Next(population.PopulationLenth)));
+            }
 
             //ordena a população
-            PopulationIntermediaria.SortPopulation();
+            randomPopulation.SortPopulation();
 
             Individual[] pais = new Individual[2];
 
             //seleciona os 2 melhores deste população
-            pais[0] = PopulationIntermediaria.GetIndivdualAt(0);
-            pais[1] = PopulationIntermediaria.GetIndivdualAt(1);
+            pais[0] = randomPopulation.GetIndivdualAt(0);
+            pais[1] = randomPopulation.GetIndivdualAt(1);
 
             return pais;
         }
